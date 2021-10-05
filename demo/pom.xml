@@ -1,0 +1,137 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>demo</groupId>
+	<artifactId>demo</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<properties>
+		<xtend-maven-plugin.version>2.26.0.M2</xtend-maven-plugin.version>
+		<xtext-maven-plugin.version>2.26.0.M2</xtext-maven-plugin.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<!-- For Xtext and Xtend we must add the generated sources to the java 
+					source search path -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/generated</source>
+								<source>src/main/xtend</source>
+								<source>src/main/xtend-gen</source>
+							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-sources</id>
+						<phase>generate-sources</phase> <!-- generate-sources instead of generate-test-sources in order to have them 
+							in eclipse:eclipse -->
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/test/xtend</source>
+								<source>src/test/xtend-gen</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.xtext</groupId>
+				<artifactId>xtext-maven-plugin</artifactId>
+				<version>${xtext-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<javaSourceVersion>11</javaSourceVersion>  <!-- could set to 11 now -->
+							<compilerSourceLevel>11</compilerSourceLevel>
+							<compilerTargetLevel>11</compilerTargetLevel>
+							<addOutputDirectoriesToCompileSourceRoots>false</addOutputDirectoriesToCompileSourceRoots>
+							<sourceRoots>
+								<sourceRoot>${project.basedir}/src/main/bon</sourceRoot>
+							</sourceRoots>
+							<languages>
+								<language>
+									<setup>org.xtext.example.mydsl.MyDslStandaloneSetup</setup>
+									<outputConfigurations>
+										<outputConfiguration>
+											<outputDirectory>${project.basedir}/src/generated</outputDirectory>
+										</outputConfiguration>
+									</outputConfigurations>
+								</language>
+							</languages>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.xtext.example.mydsl</groupId>
+						<artifactId>org.xtext.example.mydsl</artifactId>
+						<version>1.0.0-SNAPSHOT</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+
+
+			<plugin>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+				<version>${xtend-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.basedir}/src/main/xtend-gen</outputDirectory>
+							<javaSourceVersion>11</javaSourceVersion>  <!-- could set to 11 now -->
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-compile</id>
+						<phase>process-test-sources</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+						<configuration>
+							<testOutputDirectory>${project.basedir}/src/test/xtend-gen</testOutputDirectory>
+							<javaSourceVersion>11</javaSourceVersion>  <!-- could set to 11 now -->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.xtend</groupId>
+			<artifactId>org.eclipse.xtend.lib</artifactId>
+			<version>${xtend-maven-plugin.version}</version>
+		</dependency>
+	</dependencies>
+</project>
