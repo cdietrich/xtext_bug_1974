@@ -25,6 +25,9 @@ class MyDslGenerator extends AbstractGenerator {
 						
 					}
 					''')
+					fsa.generateFile("demo/"+ g.name +"Greeter.sql","SQL", '''
+					SELECT FROM GREETINGS WHERE NAME='«g.name»';
+					''')
 				}
 //		fsa.generateFile('greetings.txt', 'People to greet: ' + 
 //			resource.allContents
